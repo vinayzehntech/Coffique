@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffique - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-image: url(images/main2.jpg);">
+    <div class="login-container">
+        <h2>Login</h2>
+        <form onsubmit="loginUser(event)" style="gap:1px">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your Email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your Password" required>
+
+            <label>
+                <input type="checkbox" id="remember-me"> Remember Me
+            </label>
+
+            <button type="submit">Login</button>
+        </form>
+        
+        <div class="forgot-password">
+            <p><a href="/forgotpass.html">Forgot Password?</a></p>
+        </div>
+
+        <div class="signup-container">
+            <p>Don't have an account? <a href="register.html">Create New</a></p>
+        </div>
+    </div>
+
+    <script>
+        function loginUser(event) {
+            event.preventDefault(); // Prevent form submission
+
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let rememberMe = document.getElementById("remember-me").checked;
+
+            // Retrieve users from localStorage
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+
+            // Check if user exists
+            let user = users.find(user => user.email === email && user.password===password);
+
+            if (user) {
+                // Simulating password verification (since we didn't store passwords)
+                alert("Login successful!");
+                
+                // Store user session
+                localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+                // Remember Me functionality
+                if (rememberMe) {
+                    localStorage.setItem("rememberedEmail", email);
+                    localStorage.setItem("rememberedPassword",password)
+                  
+                } else {
+                    localStorage.removeItem("rememberedEmail");
+                    localStorage.removeItem("rememberedPassword",password)
+                }
+
+                window.location.href = "userinfo.html"; 
+            } else {
+                alert("Invalid email or password!");
+            }
+        }
+
+        // Autofill email if "Remember Me" was previously checked
+        window.onload = function() {
+            let rememberedEmail = localStorage.getItem("rememberedEmail");
+            let rememberPass=localStorage.getItem("rememberedPassword");
+          
+            if (rememberedEmail && rememberPass) {
+                document.getElementById("email").value = rememberedEmail;
+                document.getElementById("password").value=rememberPass;
+
+
+                document.getElementById("remember-me").checked = true;
+            }
+        };
+
+  
+    </script>
+</body>
+</html>
